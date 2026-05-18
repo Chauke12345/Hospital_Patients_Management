@@ -183,3 +183,4 @@ LOGOUT_REDIRECT_URL = '/accounts/login/'
 # =====================================
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+

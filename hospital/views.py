@@ -136,31 +136,45 @@ def appointments(request):
     doctors = Doctor.objects.all()
     patients = Patient.objects.all()
 
-    appointments_list = Appointment.objects.select_related(
-        "doctor", "patient"
-    ).order_by("-created_at")
+    appointments_list = Appointment.objects.all().order_by("-created_at")
 
     if request.method == "POST":
-        doctor_id = request.POST.get("doctor")
-        patient_id = request.POST.get("patient")
+        try:
+            doctor_id = request.POST.get("doctor")
+            patient_id = request.POST.get("patient")
+            date = request.POST.get("date")
+            time = request.POST.get("time")
+            reason = request.POST.get("reason", "")
 
-        if doctor_id and patient_id:
+            if not all([doctor_id, patient_id, date, time]):
+                raise ValueError("Missing required fields")
+
+            doctor = Doctor.objects.get(id=int(doctor_id))
+            patient = Patient.objects.get(id=int(patient_id))
+
             Appointment.objects.create(
-                doctor_id=doctor_id,
-                patient_id=patient_id,
-                date=request.POST.get("date"),
-                time=request.POST.get("time"),
-                reason=request.POST.get("reason", "")
+                doctor=doctor,
+                patient=patient,
+                date=date,
+                time=time,
+                reason=reason
             )
 
-        return redirect("appointments")
+            return redirect("appointments")
+
+        except Exception as e:
+            return render(request, "hospital/appointments.html", {
+                "doctors": doctors,
+                "patients": patients,
+                "appointments": appointments_list,
+                "error": str(e)
+            })
 
     return render(request, "hospital/appointments.html", {
         "doctors": doctors,
         "patients": patients,
         "appointments": appointments_list
     })
-
 # =========================
 # PRESCRIPTIONS VIEW
 # =========================
