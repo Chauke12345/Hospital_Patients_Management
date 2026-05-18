@@ -1,13 +1,5 @@
-from django.contrib.auth.models import User
-from django.http import HttpResponse
+from django.apps import AppConfig
 
-def fix_admin(request):
-    User.objects.filter(username="admin").delete()
-
-    User.objects.create_superuser(
-        username="admin",
-        email="admin@gmail.com",
-        password="1234"
-    )
-
-    return HttpResponse("Admin reset successful")
+class HospitalConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'hospital'
