@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 
 from patients.models import Patient
@@ -10,7 +9,6 @@ from doctors.models import Doctor
 # RECEPTION VIEW
 # Register New Patient
 # =========================
-@login_required(login_url='login')
 def reception(request):
 
     doctors = Doctor.objects.all()
@@ -67,7 +65,6 @@ def reception(request):
 # =========================
 # ADMIT PATIENT
 # =========================
-@login_required(login_url='login')
 def admit_patient(request, patient_id):
 
     patient = get_object_or_404(Patient, id=patient_id)

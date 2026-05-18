@@ -3,4 +3,5 @@ from . import views
 
 urlpatterns = [
     path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
+    path("dashboard/", views.dashboard, name="dashboard"),
 ]
