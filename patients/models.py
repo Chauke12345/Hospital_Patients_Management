@@ -1,11 +1,5 @@
 from django.db import models
-
-
-class Doctor(models.Model):
-    name = models.CharField(max_length=200)
-
-    def __str__(self):
-        return self.name
+from doctors.models import Doctor   # IMPORTANT: single source of truth
 
 
 class Patient(models.Model):
@@ -30,7 +24,8 @@ class Patient(models.Model):
         Doctor,
         on_delete=models.SET_NULL,
         null=True,
-        blank=True
+        blank=True,
+        related_name="patients"
     )
 
     admitted_at = models.DateTimeField(auto_now_add=True)
