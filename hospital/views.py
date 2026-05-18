@@ -135,21 +135,16 @@ def reception(request):
 def appointments(request):
     doctors = Doctor.objects.all()
     patients = Patient.objects.all()
-    appointments = Appointment.objects.all()
+
+    appointments_list = Appointment.objects.select_related(
+        "doctor", "patient"
+    ).order_by("-created_at")
 
     if request.method == "POST":
         doctor_id = request.POST.get("doctor")
         patient_id = request.POST.get("patient")
 
-        if not doctor_id or not patient_id:
-            return render(request, "hospital/appointments.html", {
-                "doctors": doctors,
-                "patients": patients,
-                "appointments": appointments,
-                "error": "Doctor and patient are required"
-            })
-
-        try:
+        if doctor_id and patient_id:
             Appointment.objects.create(
                 doctor_id=doctor_id,
                 patient_id=patient_id,
@@ -158,24 +153,13 @@ def appointments(request):
                 reason=request.POST.get("reason", "")
             )
 
-        except Exception as e:
-            print("APPOINTMENT ERROR:", e)
-
-            return render(request, "hospital/appointments.html", {
-                "doctors": doctors,
-                "patients": patients,
-                "appointments": appointments,
-                "error": str(e)
-            })
-
         return redirect("appointments")
 
     return render(request, "hospital/appointments.html", {
         "doctors": doctors,
         "patients": patients,
-        "appointments": appointments
+        "appointments": appointments_list
     })
-
 
 # =========================
 # PRESCRIPTIONS VIEW
