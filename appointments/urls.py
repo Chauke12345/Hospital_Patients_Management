@@ -11,4 +11,6 @@ urlpatterns = [
 
     # Delete appointment
     path('delete/<int:id>/', views.delete_appointment, name='delete_appointment'),
+
+    path("", views.appointment_list, name="appointments"),
 ]

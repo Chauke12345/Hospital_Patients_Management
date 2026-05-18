@@ -4,58 +4,35 @@ from doctors.models import Doctor
 from patients.models import Patient
 
 
-def appointments(request):
-    # Load all required data
+def appointment_list(request):
     doctors = Doctor.objects.all()
     patients = Patient.objects.all()
 
-    # Show newest appointments first (better UX)
     appointments_list = Appointment.objects.select_related(
         "doctor", "patient"
-    ).order_by("-created_at")
+    ).order_by("-id")
 
     # =========================
     # CREATE APPOINTMENT (POST)
     # =========================
     if request.method == "POST":
-        doctor_id = request.POST.get("doctor")
-        patient_id = request.POST.get("patient")
-        date = request.POST.get("date")
-        time = request.POST.get("time")
-        reason = request.POST.get("reason", "")
+        doctor = get_object_or_404(Doctor, id=request.POST.get("doctor"))
+        patient = get_object_or_404(Patient, id=request.POST.get("patient"))
 
-        # Basic validation
-        if not doctor_id or not patient_id or not date or not time:
-            return render(request, "hospital/appointments.html", {
-                "doctors": doctors,
-                "patients": patients,
-                "appointments": appointments_list,
-                "error": "All required fields must be filled"
-            })
+        Appointment.objects.create(
+            doctor=doctor,
+            patient=patient,
+            date=request.POST.get("date"),
+            time=request.POST.get("time"),
+            reason=request.POST.get("reason", "")
+        )
 
-        try:
-            Appointment.objects.create(
-                doctor_id=doctor_id,
-                patient_id=patient_id,
-                date=date,
-                time=time,
-                reason=reason
-            )
-
-            return redirect("appointments")
-
-        except Exception as e:
-            return render(request, "hospital/appointments.html", {
-                "doctors": doctors,
-                "patients": patients,
-                "appointments": appointments_list,
-                "error": f"Error creating appointment: {str(e)}"
-            })
+        return redirect("appointments")
 
     # =========================
     # GET REQUEST (PAGE LOAD)
     # =========================
-    return render(request, "hospital/appointments.html", {
+    return render(request, "appointments/appointments.html", {
         "doctors": doctors,
         "patients": patients,
         "appointments": appointments_list
