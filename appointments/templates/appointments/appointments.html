@@ -1,47 +1,209 @@
-<tbody>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f6f9;
+        margin: 0;
+        padding: 30px;
+        color: #333;
+    }
 
-    {% for a in appointments %}
+    h2 {
+        margin-bottom: 15px;
+        color: #222;
+    }
 
-    <tr>
+    /* ================= FORM CARD ================= */
+    .form-card {
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        max-width: 600px;
+        margin-bottom: 30px;
+    }
 
-        <td>{{ a.id }}</td>
-        <td>{{ a.patient.name }}</td>
-        <td>Dr. {{ a.doctor.name }}</td>
-        <td>{{ a.date }}</td>
-        <td>{{ a.time }}</td>
-        <td>{{ a.reason }}</td>
+    label {
+        font-weight: 600;
+        display: block;
+        margin-top: 10px;
+        margin-bottom: 5px;
+    }
 
-        <td>
-            <span class="badge-status">
-                Scheduled
-            </span>
-        </td>
+    input, select {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        outline: none;
+        transition: 0.2s;
+    }
 
-        <!-- ✅ DELETE BUTTON GOES HERE -->
-        <td>
-            <form method="POST"
-                  action="{% url 'delete_appointment' a.id %}"
-                  onsubmit="return confirm('Are you sure you want to delete this appointment?');">
+    input:focus, select:focus {
+        border-color: #4a90e2;
+        box-shadow: 0 0 4px rgba(74,144,226,0.3);
+    }
 
-                {% csrf_token %}
+    button {
+        margin-top: 15px;
+        padding: 10px 15px;
+        background: #4a90e2;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
 
-                <button type="submit" class="btn btn-danger btn-sm">
-                    🗑 Delete
-                </button>
+    button:hover {
+        background: #357bd8;
+    }
 
-            </form>
-        </td>
+    .delete-btn {
+        background: #e74c3c;
+    }
 
-    </tr>
+    .delete-btn:hover {
+        background: #c0392b;
+    }
 
-    {% empty %}
+    /* ================= TABLE ================= */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
 
-    <tr>
-        <td colspan="8" class="text-center text-muted p-4">
-            No appointments have been booked yet
-        </td>
-    </tr>
+    th {
+        background: #4a90e2;
+        color: white;
+        text-align: left;
+        padding: 12px;
+    }
 
-    {% endfor %}
+    td {
+        padding: 12px;
+        border-bottom: 1px solid #eee;
+    }
 
-</tbody>
+    tr:hover {
+        background: #f9fbff;
+    }
+
+    .status {
+        color: #27ae60;
+        font-weight: bold;
+    }
+
+    .error {
+        color: red;
+        margin-bottom: 15px;
+    }
+
+    .center {
+        text-align: center;
+    }
+</style>
+
+<h2>Book Appointment</h2>
+
+<!-- ERROR -->
+{% if error %}
+    <p class="error">{{ error }}</p>
+{% endif %}
+
+<!-- ================= FORM ================= -->
+<div class="form-card">
+    <form method="POST">
+        {% csrf_token %}
+
+        <label>Patient</label>
+        <select name="patient" required>
+            <option value="">Select Patient</option>
+            {% for p in patients %}
+                <option value="{{ p.id }}">{{ p.name }}</option>
+            {% endfor %}
+        </select>
+
+        <label>Doctor</label>
+        <select name="doctor" required>
+            <option value="">Select Doctor</option>
+            {% for d in doctors %}
+                <option value="{{ d.id }}">Dr. {{ d.name }}</option>
+            {% endfor %}
+        </select>
+
+        <label>Date</label>
+        <input type="date" name="date" required>
+
+        <label>Time</label>
+        <input type="time" name="time" required>
+
+        <label>Reason (optional)</label>
+        <input type="text" name="reason">
+
+        <button type="submit">Book Appointment</button>
+    </form>
+</div>
+
+<!-- ================= TABLE ================= -->
+<h2>Appointments List</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Patient</th>
+            <th>Doctor</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for a in appointments %}
+        <tr>
+            <td>{{ a.id|default:"-" }}</td>
+
+            <td>
+                {{ a.patient.name|default:"Unknown" }}
+            </td>
+
+            <td>
+                Dr. {{ a.doctor.name|default:"Unknown" }}
+            </td>
+
+            <td>{{ a.date|default:"-" }}</td>
+            <td>{{ a.time|default:"-" }}</td>
+            <td>{{ a.reason|default:"-" }}</td>
+
+            <td><span class="status">Scheduled</span></td>
+
+            <td>
+                {% if a.id %}
+                <form method="POST"
+                      action="{% url 'delete_appointment' a.id %}"
+                      onsubmit="return confirm('Delete this appointment?');">
+                    {% csrf_token %}
+                    <button type="submit" class="delete-btn">
+                        Delete
+                    </button>
+                </form>
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+        </tr>
+
+        {% empty %}
+        <tr>
+            <td colspan="8" class="center">No appointments found</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
