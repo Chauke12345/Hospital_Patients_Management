@@ -4,38 +4,38 @@ from doctors.models import Doctor
 from patients.models import Patient
 
 
-def appointment_list(request):
-    doctors = Doctor.objects.all()
-    patients = Patient.objects.all()
-
-    appointments_list = Appointment.objects.select_related(
-        "doctor", "patient"
-    ).order_by("-id")
-
-    # =========================
-    # CREATE APPOINTMENT (POST)
-    # =========================
+# =========================
+# ADD APPOINTMENT
+# =========================
+def add_appointment(request):
     if request.method == "POST":
-        doctor = get_object_or_404(Doctor, id=request.POST.get("doctor"))
-        patient = get_object_or_404(Patient, id=request.POST.get("patient"))
+        patient_id = request.POST.get("patient")
+        doctor_id = request.POST.get("doctor")
+        date = request.POST.get("date")
+        time = request.POST.get("time")
+        reason = request.POST.get("reason")
+
+        patient = get_object_or_404(Patient, id=patient_id)
+        doctor = get_object_or_404(Doctor, id=doctor_id)
 
         Appointment.objects.create(
-            doctor=doctor,
             patient=patient,
-            date=request.POST.get("date"),
-            time=request.POST.get("time"),
-            reason=request.POST.get("reason", "")
+            doctor=doctor,
+            date=date,
+            time=time,
+            reason=reason
         )
 
         return redirect("appointments")
 
-    # =========================
-    # GET REQUEST (PAGE LOAD)
-    # =========================
-    return render(request, "appointments/appointments.html", {
-        "doctors": doctors,
+    patients = Patient.objects.all()
+    doctors = Doctor.objects.all()
+    appointments = Appointment.objects.select_related("patient", "doctor").all()
+
+    return render(request, "appointments.html", {
         "patients": patients,
-        "appointments": appointments_list
+        "doctors": doctors,
+        "appointments": appointments
     })
 
 
