@@ -5,6 +5,21 @@ from patients.models import Patient
 
 
 # =========================
+# LIST APPOINTMENTS (MAIN PAGE)
+# =========================
+def appointment_list(request):
+    appointments = Appointment.objects.select_related("patient", "doctor").all()
+    patients = Patient.objects.all()
+    doctors = Doctor.objects.all()
+
+    return render(request, "appointments.html", {
+        "appointments": appointments,
+        "patients": patients,
+        "doctors": doctors
+    })
+
+
+# =========================
 # ADD APPOINTMENT
 # =========================
 def add_appointment(request):
@@ -26,17 +41,7 @@ def add_appointment(request):
             reason=reason
         )
 
-        return redirect("appointments")
-
-    patients = Patient.objects.all()
-    doctors = Doctor.objects.all()
-    appointments = Appointment.objects.select_related("patient", "doctor").all()
-
-    return render(request, "appointments.html", {
-        "patients": patients,
-        "doctors": doctors,
-        "appointments": appointments
-    })
+    return redirect("appointments")
 
 
 # =========================
