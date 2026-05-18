@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Appointment
 from doctors.models import Doctor
 from patients.models import Patient
@@ -10,7 +10,9 @@ def appointments(request):
     patients = Patient.objects.all()
 
     # Show newest appointments first (better UX)
-    appointments = Appointment.objects.select_related("doctor", "patient").order_by("-created_at")
+    appointments_list = Appointment.objects.select_related(
+        "doctor", "patient"
+    ).order_by("-created_at")
 
     # =========================
     # CREATE APPOINTMENT (POST)
@@ -27,7 +29,7 @@ def appointments(request):
             return render(request, "hospital/appointments.html", {
                 "doctors": doctors,
                 "patients": patients,
-                "appointments": appointments,
+                "appointments": appointments_list,
                 "error": "All required fields must be filled"
             })
 
@@ -46,7 +48,7 @@ def appointments(request):
             return render(request, "hospital/appointments.html", {
                 "doctors": doctors,
                 "patients": patients,
-                "appointments": appointments,
+                "appointments": appointments_list,
                 "error": f"Error creating appointment: {str(e)}"
             })
 
@@ -56,5 +58,17 @@ def appointments(request):
     return render(request, "hospital/appointments.html", {
         "doctors": doctors,
         "patients": patients,
-        "appointments": appointments
+        "appointments": appointments_list
     })
+
+
+# =========================
+# DELETE APPOINTMENT
+# =========================
+def delete_appointment(request, id):
+    appointment = get_object_or_404(Appointment, id=id)
+
+    if request.method == "POST":
+        appointment.delete()
+
+    return redirect("appointments")

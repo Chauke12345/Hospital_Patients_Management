@@ -2,7 +2,13 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.appointment_list, name='appointment_list'),
+
+    # Main appointments page
+    path('', views.appointments, name='appointments'),
+
+    # Add appointment (if separate view is needed)
     path('add/', views.add_appointment, name='add_appointment'),
-    path("", views.appointments, name="appointments"),
+
+    # Delete appointment
+    path('delete/<int:id>/', views.delete_appointment, name='delete_appointment'),
 ]

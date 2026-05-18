@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Prescription
 from doctors.models import Doctor
 from patients.models import Patient
@@ -9,7 +9,7 @@ def prescriptions(request):
     doctors = Doctor.objects.all()
     patients = Patient.objects.all()
 
-    prescriptions = Prescription.objects.select_related(
+    prescriptions_list = Prescription.objects.select_related(
         "doctor", "patient"
     ).order_by("-created_at")
 
@@ -28,7 +28,7 @@ def prescriptions(request):
             return render(request, "hospital/prescriptions.html", {
                 "doctors": doctors,
                 "patients": patients,
-                "prescriptions": prescriptions,
+                "prescriptions": prescriptions_list,
                 "error": "Doctor, patient, and medication are required"
             })
 
@@ -47,7 +47,7 @@ def prescriptions(request):
             return render(request, "hospital/prescriptions.html", {
                 "doctors": doctors,
                 "patients": patients,
-                "prescriptions": prescriptions,
+                "prescriptions": prescriptions_list,
                 "error": str(e)
             })
 
@@ -57,5 +57,17 @@ def prescriptions(request):
     return render(request, "hospital/prescriptions.html", {
         "doctors": doctors,
         "patients": patients,
-        "prescriptions": prescriptions
+        "prescriptions": prescriptions_list
     })
+
+
+# =========================
+# DELETE PRESCRIPTION
+# =========================
+def delete_prescription(request, id):
+    prescription = get_object_or_404(Prescription, id=id)
+
+    if request.method == "POST":
+        prescription.delete()
+
+    return redirect("prescriptions")

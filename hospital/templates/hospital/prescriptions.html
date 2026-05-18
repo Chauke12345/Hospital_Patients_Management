@@ -301,6 +301,19 @@
                             No prescriptions found
 
                         </td>
+                        <td>
+    <form method="POST"
+          action="{% url 'delete_prescription' p.id %}"
+          onsubmit="return confirm('Are you sure you want to delete this prescription?');">
+
+        {% csrf_token %}
+
+        <button type="submit" class="btn btn-danger btn-sm">
+            🗑 Delete
+        </button>
+
+    </form>
+</td>
 
                     </tr>
 

@@ -1,5 +1,6 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 
 from .models import Patient
 from .forms import PatientForm
@@ -35,13 +36,16 @@ def add_patient(request):
     })
 
 
-# 👉 PASTE THIS BELOW OTHER VIEWS
+# =========================
+# DISCHARGE PATIENT
+# =========================
 @login_required
 def discharge_patient(request, patient_id):
     patient = get_object_or_404(Patient, id=patient_id)
 
-    patient.is_discharged = True
-    patient.discharged_at = timezone.now()
-    patient.save()
+    if request.method == "POST":
+        patient.is_discharged = True
+        patient.discharged_at = timezone.now()
+        patient.save()
 
     return redirect('patient_list')
