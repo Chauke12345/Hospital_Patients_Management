@@ -28,6 +28,9 @@ class Patient(models.Model):
         related_name="patients"
     )
 
+    is_discharged = models.BooleanField(default=False)
+    discharged_at = models.DateTimeField(null=True, blank=True)
+
     admitted_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
