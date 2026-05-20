@@ -1,0 +1,230 @@
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f6f9;
+        margin: 0;
+        padding: 30px;
+        color: #333;
+    }
+
+    h2 {
+        margin-bottom: 15px;
+        color: #222;
+    }
+
+    .top-bar {
+        margin-bottom: 20px;
+    }
+
+    .dashboard-btn {
+        background: #2c3e50;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 8px;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .dashboard-btn:hover {
+        background: #1f2d3a;
+    }
+
+    .form-card {
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        max-width: 600px;
+        margin-bottom: 30px;
+    }
+
+    label {
+        font-weight: 600;
+        display: block;
+        margin-top: 10px;
+        margin-bottom: 5px;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+    }
+
+    input:focus, select:focus {
+        border-color: #4a90e2;
+        outline: none;
+    }
+
+    button {
+        margin-top: 15px;
+        padding: 10px 15px;
+        background: #4a90e2;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #357bd8;
+    }
+
+    .delete-btn {
+        background: #e74c3c;
+    }
+
+    .delete-btn:hover {
+        background: #c0392b;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    th {
+        background: #4a90e2;
+        color: white;
+        padding: 12px;
+        text-align: left;
+    }
+
+    td {
+        padding: 12px;
+        border-bottom: 1px solid #eee;
+    }
+
+    tr:hover {
+        background: #f9fbff;
+    }
+
+    .status {
+        color: #27ae60;
+        font-weight: bold;
+    }
+
+    .error {
+        color: red;
+    }
+
+    .center {
+        text-align: center;
+    }
+</style>
+
+<div style="background:#4a90e2; color:white; padding:12px 18px; border-radius:10px; margin-bottom:15px;">
+    <div style="font-size:20px; font-weight:bold;">
+        🏥 Eddie's Healthcare
+    </div>
+    <div style="font-size:12px; opacity:0.9;">
+        Appointment & Patient Management System
+    </div>
+</div>
+
+<!-- TOP BUTTON -->
+<div class="top-bar">
+    <a href="{% url 'dashboard' %}" class="dashboard-btn">⬅ Dashboard</a>
+</div>
+
+<h2>Book Appointment</h2>
+
+{% if error %}
+    <p class="error">{{ error }}</p>
+{% endif %}
+
+
+<!-- FORM -->
+<div class="form-card">
+    <form method="POST">
+        {% csrf_token %}
+
+       <!-- PATIENT SELECTION -->
+<!-- PATIENT DROPDOWN -->
+<label>Patient</label>
+<select name="patient" required>
+    <option value="">Select Patient</option>
+
+    {% for patient in patients %}
+        <option value="{{ patient.id }}">
+            {{ patient.name }}
+        </option>
+    {% endfor %}
+</select>
+
+<!-- DOCTOR DROPDOWN -->
+<label>Doctor</label>
+<select name="doctor" required>
+    <option value="">Select Doctor</option>
+
+    {% for doctor in doctors %}
+        <option value="{{ doctor.id }}">
+            Dr. {{ doctor.first_name }} {{ doctor.last_name }}
+        </option>
+    {% endfor %}
+</select>
+        <!-- DATE -->
+        <label>Date</label>
+        <input type="date" name="date" required>
+
+        <!-- TIME -->
+        <label>Time</label>
+        <input type="time" name="time" required>
+
+        <!-- REASON -->
+        <label>Reason (optional)</label>
+        <input type="text" name="reason">
+
+        <button type="submit">Book Appointment</button>
+    </form>
+</div>
+
+<!-- TABLE -->
+<h2>Appointments List</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Patient</th>
+            <th>Doctor</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for a in appointments %}
+        <tr>
+            <td>{{ a.id }}</td>
+            <td>{{ a.patient.name }}</td>
+            <td>Dr. {{ a.doctor.first_name }} {{ a.doctor.last_name }}</td>
+            <td>{{ a.date }}</td>
+            <td>{{ a.time }}</td>
+            <td>{{ a.reason }}</td>
+            <td><span class="status">Scheduled</span></td>
+
+            <td>
+                <form method="POST"
+                      action="{% url 'delete_appointment' a.id %}"
+                      onsubmit="return confirm('Delete this appointment?');">
+                    {% csrf_token %}
+                    <button type="submit" class="delete-btn">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="8" class="center">No appointments found</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+

@@ -1,0 +1,72 @@
+<h2 style="margin-bottom: 20px;">🏥 Patient List</h2>
+
+<!-- BACK BUTTON -->
+<div style="margin-bottom: 15px;">
+    <a href="{% url 'dashboard' %}" style="text-decoration: none;">
+        <button style="
+            background: #555;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        ">
+            ⬅ Back to Dashboard
+        </button>
+    </a>
+</div>
+
+<table style="
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    border-radius: 10px;
+    overflow: hidden;
+">
+
+    <thead style="background: #1f4fa3; color: white;">
+        <tr>
+            <th style="padding: 12px;">Patient</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Contact</th>
+            <th>Doctor</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        {% for patient in patients %}
+        <tr style="border-bottom: 1px solid #eee;">
+
+            <td style="padding: 10px; font-weight: bold;">
+                {{ patient.name }}
+            </td>
+
+            <td>{{ patient.age }}</td>
+            <td>{{ patient.gender }}</td>
+            <td>{{ patient.phone }}</td>
+            <td>{{ patient.doctor }}</td>
+
+            <td>
+                {% if patient.is_inpatient %}
+                    <span style="color: green; font-weight: bold;">🏥 Admitted</span>
+                {% else %}
+                    <span style="color: gray; font-weight: bold;">🏠 Discharged</span>
+                {% endif %}
+            </td>
+
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6" style="text-align:center; padding: 20px;">
+                No patients found
+            </td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+
+</table>

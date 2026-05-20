@@ -13,44 +13,42 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 Django settings for config project.
 """
+"""
+Django settings for config project.
+"""
 
 from pathlib import Path
 import os
-import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# =====================================
-# SECURITY
-# =====================================
-import os
+# =========================
+# SECURITY (DEV MODE)
+# =========================
 
 SECRET_KEY = os.environ.get(
     "SECRET_KEY",
     "django-insecure-dev-only-key"
 )
 
-DEBUG = os.environ.get("DEBUG", "False") == "True"
+DEBUG = True
 
 ALLOWED_HOSTS = [
-    host for host in os.environ.get(
-        "ALLOWED_HOSTS",
-        "hospital-patients-management.onrender.com"
-    ).split(",")
-    if host
+    "127.0.0.1",
+    "localhost",
 ]
 
+
 CSRF_TRUSTED_ORIGINS = [
-    origin for origin in os.environ.get(
-        "CSRF_TRUSTED_ORIGINS",
-        "https://hospital-patients-management.onrender.com"
-    ).split(",")
-    if origin
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
 ]
-# =====================================
+
+
+# =========================
 # APPS
-# =====================================
+# =========================
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -59,42 +57,34 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    # apps
-    'accounts',
-    'patients',
-    'doctors',
-    'appointments',
-    'billing',
-    'pharmacy',
-    'dashboard',
     'hospital',
+   
+   
 ]
 
 
-# =====================================
-# MIDDLEWARE (FIXED)
-# =====================================
+
+# =========================
+# MIDDLEWARE
+# =========================
 
 MIDDLEWARE = [
-    "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
-
-    "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 
 ROOT_URLCONF = 'config.urls'
 
 
-# =====================================
+# =========================
 # TEMPLATES
-# =====================================
+# =========================
 
 TEMPLATES = [
     {
@@ -114,22 +104,24 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-import dj_database_url
-import os
+
+# =========================
+# DATABASE
+# =========================
 
 DATABASES = {
-    "default": dj_database_url.config(
-        default=os.environ.get(
-            "DATABASE_URL",
-            f"sqlite:///{BASE_DIR / 'db.sqlite3'}"
-        ),
-        conn_max_age=600
-    )
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
 }
 
-# =====================================
+
+
+
+# =========================
 # PASSWORD VALIDATION
-# =====================================
+# =========================
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -139,9 +131,9 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# =====================================
+# =========================
 # INTERNATIONALIZATION
-# =====================================
+# =========================
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
@@ -149,38 +141,20 @@ USE_I18N = True
 USE_TZ = True
 
 
-# =====================================
-# STATIC FILES (RENDER READY)
-# =====================================
+# =========================
+# STATIC FILES
+# =========================
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = []
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 
-
-# WhiteNoise (modern Django way)
-STORAGES = {
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
-
-
-# =====================================
-# AUTH
-# =====================================
-
-AUTH_USER_MODEL = 'accounts.User'
-
-LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/accounts/login/'
-
-
-# =====================================
+# =========================
 # DEFAULT PRIMARY KEY
-# =====================================
+# =========================
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = "hospital.User"
 

@@ -1,267 +1,514 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDDIES HEALTH </CENTER></title>
+    <title>Hospital Dashboard</title>
 
-    <!-- BOOTSTRAP -->
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- ICONS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
 
         body{
-            background:#f4f7fc;
-            font-family:Arial, sans-serif;
-        }
-
-        .navbar-custom{
-            background:linear-gradient(90deg,#0d6efd,#0b5ed7);
-            padding:15px;
-        }
-
-        .navbar-title{
-            color:white;
-            font-size:28px;
-            font-weight:bold;
             margin:0;
+            background:#f4f7fb;
+            font-family:'Segoe UI',sans-serif;
         }
 
-        .dashboard-card{
-            border:none;
-            border-radius:20px;
+        /* SIDEBAR */
+
+        .sidebar{
+            position:fixed;
+            width:270px;
+            height:100vh;
+            background:#0f172a;
+            color:white;
+            padding:25px;
+        }
+
+        .logo{
+            font-size:28px;
+            font-weight:700;
+            margin-bottom:40px;
+        }
+
+        .menu-title{
+            color:#94a3b8;
+            font-size:13px;
+            margin-top:25px;
+            margin-bottom:10px;
+            text-transform:uppercase;
+            letter-spacing:1px;
+        }
+
+        .sidebar a{
+            display:flex;
+            align-items:center;
+            gap:14px;
+            color:#cbd5e1;
+            text-decoration:none;
+            padding:14px;
+            border-radius:14px;
+            margin-bottom:10px;
             transition:0.3s;
+        }
+
+        .sidebar a:hover{
+            background:#1e293b;
+            color:white;
+        }
+
+        .sidebar .active{
+            background:linear-gradient(135deg,#2563eb,#3b82f6);
+            color:white;
+        }
+
+        /* MAIN */
+
+        .main{
+            margin-left:270px;
+            padding:30px;
+        }
+
+        /* TOPBAR */
+
+        .topbar{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:30px;
+        }
+
+        .search-box{
+            width:350px;
+            background:white;
+            padding:12px 18px;
+            border-radius:15px;
+            box-shadow:0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .search-box input{
+            border:none;
+            width:100%;
+            outline:none;
+        }
+
+        /* HERO */
+
+        .hero{
+            background:linear-gradient(135deg,#0f766e,#0d9488);
+            color:white;
+            border-radius:25px;
+            padding:35px;
+            margin-bottom:30px;
+            position:relative;
             overflow:hidden;
         }
 
-        .dashboard-card:hover{
+        .hero::after{
+            content:'';
+            position:absolute;
+            width:280px;
+            height:280px;
+            border-radius:50%;
+            background:rgba(255,255,255,0.08);
+            top:-90px;
+            right:-80px;
+        }
+
+        /* KPI */
+
+        .kpi-card{
+            background:white;
+            border-radius:20px;
+            padding:24px;
+            box-shadow:0 8px 18px rgba(0,0,0,0.05);
+            transition:0.3s;
+            border:none;
+        }
+
+        .kpi-card:hover{
             transform:translateY(-5px);
         }
 
-        .card-icon{
-            font-size:45px;
-            opacity:0.2;
+        .kpi-icon{
+            width:58px;
+            height:58px;
+            border-radius:16px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:24px;
+            margin-bottom:15px;
         }
 
-        .patients{
-            background:linear-gradient(135deg,#0d6efd,#3d8bfd);
-            color:white;
+        .blue{
+            background:#dbeafe;
+            color:#2563eb;
         }
 
-        .doctors{
-            background:linear-gradient(135deg,#198754,#20c997);
-            color:white;
+        .green{
+            background:#dcfce7;
+            color:#16a34a;
         }
 
-        .appointments{
-            background:linear-gradient(135deg,#ffc107,#ffca2c);
-            color:white;
+        .orange{
+            background:#ffedd5;
+            color:#ea580c;
         }
 
-        .prescriptions{
-            background:linear-gradient(135deg,#dc3545,#e35d6a);
-            color:white;
+        .red{
+            background:#fee2e2;
+            color:#dc2626;
         }
 
-        .quick-btn{
-            border-radius:12px;
-            padding:10px 20px;
-            font-weight:bold;
-        }
+        /* TABLES */
 
-        .section-title{
-            font-weight:bold;
-            margin-bottom:20px;
-        }
-
-        .action-card{
-            border:none;
+        .dashboard-card{
+            background:white;
             border-radius:20px;
-            transition:0.3s;
+            padding:25px;
+            box-shadow:0 8px 18px rgba(0,0,0,0.05);
+            border:none;
         }
 
-        .action-card:hover{
-            transform:scale(1.03);
+        .status{
+            padding:6px 14px;
+            border-radius:30px;
+            font-size:12px;
+            font-weight:600;
         }
 
-        .action-icon{
-            font-size:55px;
+        .Critical{
+            background:#fee2e2;
+            color:#991b1b;
+        }
+
+        .Stable{
+            background:#dcfce7;
+            color:#166534;
+        }
+
+        .Observation{
+            background:#fef3c7;
+            color:#92400e;
+        }
+
+        table td{
+            vertical-align:middle;
         }
 
     </style>
-
 </head>
 
 <body>
 
-<!-- HEADER -->
-<div class="text-center bg-danger text-white p-2">
-    <strong>EDDIES HEALTHCARE CENTER</strong>
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+    <div class="logo">
+        🏥 HealthSync
+    </div>
+
+    <div class="menu-title">
+        Main
+    </div>
+<a href="#" class="active">
+    <i class="bi bi-grid-fill"></i>
+    Dashboard
+</a>
+
+<a href="{% url 'reception' %}">
+    <i class="bi bi-person-plus-fill"></i>
+    Admission
+</a>
+
+<a href="{% url 'patients_list' %}">
+    <i class="bi bi-people-fill"></i>
+    Patients
+</a>
+
+<a href="{% url 'doctor_list' %}">
+    <i class="bi bi-person-badge-fill"></i>
+    Doctors
+</a>
+
+<a href="{% url 'appointments_list' %}">
+    <i class="bi bi-calendar2-check-fill"></i>
+    Appointments
+</a>
+<a href="{% url 'create_prescription' %}" class="btn btn-primary">
+    ➕ Create Prescription
+</a>
+
+  <a class="nav-link text-danger fw-bold" href="{% url 'emergency_list' %}">
+    <i class="bi bi-heart-pulse-fill me-1"></i>
+    Emergency-list
+</a>
+
+    <div class="menu-title">
+    <a href="{% url 'create_emergency' %}" class="btn btn-danger w-100">
+        + Create Emergency
+    </a>
 </div>
 
-<!-- NAVBAR -->
-<nav class="navbar navbar-custom">
+    <a href="{% url 'prescriptions_list' %}">
+    <i class="bi bi-capsule"></i>
+    Prescriptions/Pharmacy
+</a>
 
-    <div class="container-fluid d-flex justify-content-between">
+    <a href="#">
+        <i class="bi bi-file-earmark-medical-fill"></i>
+        Laboratory
+    </a>
 
-        <h2 class="navbar-title">
-            <i class="bi bi-hospital"></i>
-            Clinic Admin Dashboard
-        </h2>
+    <a href="#">
+        <i class="bi bi-hospital"></i>
+        Management
+    </a>
+
+    <a href="#">
+        <i class="bi bi-box-arrow-right"></i>
+        Logout
+    </a>
+
+</div>
+
+<!-- MAIN -->
+
+<div class="main">
+
+    <!-- TOPBAR -->
+
+    <div class="topbar">
 
         <div>
 
+            <h3 class="fw-bold mb-0">
+                Hospital Dashboard
+            </h3>
 
-            <a href="/logout/" class="btn btn-danger quick-btn">
-                <i class="bi bi-box-arrow-right"></i>
-                Logout
-            </a>
+            <small class="text-muted">
+                Central hospital management overview
+            </small>
+
+        </div>
+
+        <div class="search-box">
+            <input type="text" placeholder="Search patients, doctors, records...">
+        </div>
+
+    </div>
+
+    <!-- HERO -->
+
+    <div class="hero">
+
+        <h2 class="fw-bold">
+            Hospital Operations Center
+        </h2>
+
+        <p class="mb-0">
+            Monitor departments, patient activity, admissions, and emergency services in real-time.
+        </p>
+
+    </div>
+
+    <!-- KPI ROW -->
+
+    <div class="row mb-4">
+
+        <div class="col-md-3 mb-3">
+
+            <div class="kpi-card">
+
+                <div class="kpi-icon blue">
+                    <i class="bi bi-people"></i>
+                </div>
+
+                <h6>Total Patients</h6>
+
+                <h2>{{ total_patients }}</h2>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 mb-3">
+
+            <div class="kpi-card">
+
+                <div class="kpi-icon green">
+                    <i class="bi bi-person-badge"></i>
+                </div>
+
+                <h6>Doctors</h6>
+
+                <h2>{{ total_doctors }}</h2>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 mb-3">
+
+            <div class="kpi-card">
+
+                <div class="kpi-icon orange">
+                    <i class="bi bi-calendar-week"></i>
+                </div>
+
+                <h6>Appointments</h6>
+
+                <h2>{{ total_appointments }}</h2>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 mb-3">
+
+            <div class="kpi-card">
+
+                <div class="kpi-icon red">
+                    <i class="bi bi-heart-pulse"></i>
+                </div>
+
+                <h6>Emergency Cases</h6>
+
+                <h2>12</h2>
+
+            </div>
 
         </div>
 
     </div>
 
-</nav>
+    <!-- LOWER SECTION -->
 
-<!-- MAIN CONTENT -->
-<div class="container mt-5">
+    <div class="row">
 
-    <h3 class="section-title">
-        Welcome to Hospital Management System
-    </h3>
+        <!-- RECENT PATIENTS -->
 
-    <!-- DASHBOARD STATS -->
-    <div class="row g-4">
+        <div class="col-lg-8 mb-4">
 
-        <!-- PATIENTS -->
-        <div class="col-md-3">
-            <div class="card dashboard-card patients shadow">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h6>Total Patients</h6>
-                            <h1>{{ total_patients }}</h1>
-                        </div>
-                        <div class="card-icon">
-                            <i class="bi bi-people-fill"></i>
-                        </div>
-                    </div>
+            <div class="dashboard-card">
+
+                <div class="d-flex justify-content-between mb-3">
+
+                    <h5 class="fw-bold">
+                        Recent Patients
+                    </h5>
+
+                    <a href="#" class="btn btn-sm btn-primary">
+                        View All
+                    </a>
+
                 </div>
+
+                <div class="table-responsive">
+
+                    <table class="table align-middle">
+
+                        <thead>
+                            <tr>
+                                <th>Patient</th>
+                                <th>Department</th>
+                                <th>Status</th>
+                                <th>Room</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for p in patients %}
+
+                            <tr>
+
+                                <td>
+                                    <i class="bi bi-person-circle"></i>
+                                    {{ p.name }}
+                                </td>
+
+                                <td>
+                                    Cardiology
+                                </td>
+
+                                <td>
+                                    <span class="status Stable">
+                                        Stable
+                                    </span>
+                                </td>
+
+                                <td>
+                                    #203
+                                </td>
+
+                            </tr>
+
+                            {% empty %}
+
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-4">
+                                    No patients found
+                                </td>
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
             </div>
+
         </div>
 
-        <!-- DOCTORS -->
-        <div class="col-md-3">
-            <div class="card dashboard-card doctors shadow">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h6>Total Doctors</h6>
-                            <h1>{{ total_doctors }}</h1>
-                        </div>
-                        <div class="card-icon">
-                            <i class="bi bi-person-badge-fill"></i>
-                        </div>
-                    </div>
+        <!-- RIGHT PANEL -->
+
+        <div class="col-lg-4">
+
+            <div class="dashboard-card mb-4">
+
+                <h5 class="fw-bold mb-3">
+                    Bed Occupancy
+                </h5>
+
+                <h1 class="fw-bold text-primary">
+                    78%
+                </h1>
+
+                <div class="progress mt-3" style="height:10px;">
+                    <div class="progress-bar" style="width:78%;"></div>
                 </div>
-            </div>
-        </div>
 
-        <!-- APPOINTMENTS -->
-        <div class="col-md-3">
-            <div class="card dashboard-card appointments shadow">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h6>Appointments</h6>
-                            <h1>{{ total_appointments }}</h1>
-                        </div>
-                        <div class="card-icon">
-                            <i class="bi bi-calendar-check-fill"></i>
-                        </div>
-                    </div>
+            </div>
+
+            <div class="dashboard-card">
+
+                <h5 class="fw-bold mb-3">
+                    ICU Alerts
+                </h5>
+
+                <div class="alert alert-danger">
+                    Bed 12 — High Heart Rate
                 </div>
-            </div>
-        </div>
 
-        <!-- PRESCRIPTIONS -->
-        <div class="col-md-3">
-            <div class="card dashboard-card prescriptions shadow">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h6>Prescriptions</h6>
-                            <h1>{{ total_prescriptions }}</h1>
-                        </div>
-                        <div class="card-icon">
-                            <i class="bi bi-capsule-pill"></i>
-                        </div>
-                    </div>
+                <div class="alert alert-warning">
+                    Bed 5 — Oxygen Low
                 </div>
+
+                <div class="alert alert-info">
+                    Ambulance arriving in 8 mins
+                </div>
+
             </div>
-        </div>
-
-    </div>
-
-    <!-- QUICK ACTIONS -->
-    <div class="mt-5">
-
-        <h4 class="section-title">Quick Actions</h4>
-
-        <div class="row g-4">
-
-            <!-- ADMIT PATIENT (FIXED - ADDED BACK) -->
-            <div class="col-md-4">
-                <a href="/reception/" class="text-decoration-none">
-                    <div class="card shadow action-card">
-                        <div class="card-body text-center p-5">
-                            <i class="bi bi-person-plus-fill text-primary action-icon"></i>
-                            <h4 class="mt-3">Admit Patient</h4>
-                            <p class="text-muted">Register and admit patients</p>
-                        </div>
-                    </div>
-                </a>
-            </div>
-
-            <!-- APPOINTMENTS -->
-            <div class="col-md-4">
-                <a href="/appointments/" class="text-decoration-none">
-                    <div class="card shadow action-card">
-                        <div class="card-body text-center p-5">
-                            <i class="bi bi-calendar-check-fill text-warning action-icon"></i>
-                            <h4 class="mt-3">Appointments</h4>
-                            <p class="text-muted">Manage patient appointments</p>
-                        </div>
-                    </div>
-                </a>
-            </div>
-
-            <!-- ADMIN PANEL -->
-            <div class="col-md-4">
-                <a href="/admin/" class="text-decoration-none">
-                    <div class="card shadow action-card">
-                        <div class="card-body text-center p-5">
-                            <i class="bi bi-gear-fill text-danger action-icon"></i>
-                            <h4 class="mt-3">Admin Panel</h4>
-                            <p class="text-muted">Manage system data</p>
-                        </div>
-                    </div>
-                </a>
-            </div>
-             <!-- PRESCRIPTIONS (NEW) -->
-        <div class="col-md-4">
-            <a href="/prescriptions/" class="text-decoration-none">
-                <div class="card shadow action-card">
-                    <div class="card-body text-center p-5">
-                        <i class="bi bi-capsule-pill text-danger action-icon"></i>
-                        <h4 class="mt-3">Prescriptions</h4>
-                        <p class="text-muted">Manage patient prescriptions</p>
-                    </div>
 
         </div>
 
