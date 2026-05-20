@@ -16,7 +16,6 @@ Django settings for config project.
 """
 Django settings for config project.
 """
-
 from pathlib import Path
 import os
 
@@ -24,23 +23,25 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # =========================
-# SECURITY (DEV MODE)
+# SECURITY
 # =========================
 
-SECRET_KEY = os.environ.get(
-    "SECRET_KEY",
-    "django-insecure-dev-only-key"
-)
+SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-dev-only-key")
 
-DEBUG = True
+# 🔥 IMPORTANT: DEBUG must be False on Render
+DEBUG = os.environ.get("DEBUG", "False") == "True"
 
+
+# Render provides this automatically
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
+    ".onrender.com",   # ✅ REQUIRED for Render
 ]
 
 
 CSRF_TRUSTED_ORIGINS = [
+    "https://*.onrender.com",
     "http://127.0.0.1:8000",
     "http://localhost:8000",
 ]
@@ -58,10 +59,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'hospital',
-   
-   
 ]
-
 
 
 # =========================
@@ -70,6 +68,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # ✅ REQUIRED for Render static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -106,17 +105,20 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # =========================
-# DATABASE
+# DATABASE (RENDER FIX)
 # =========================
+# Render uses Postgres, NOT SQLite
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": os.environ.get("DB_ENGINE", "django.db.backends.sqlite3"),
+        "NAME": os.environ.get("DB_NAME", BASE_DIR / "db.sqlite3"),
+        "USER": os.environ.get("DB_USER", ""),
+        "PASSWORD": os.environ.get("DB_PASSWORD", ""),
+        "HOST": os.environ.get("DB_HOST", ""),
+        "PORT": os.environ.get("DB_PORT", ""),
     }
 }
-
-
 
 
 # =========================
@@ -142,19 +144,20 @@ USE_TZ = True
 
 
 # =========================
-# STATIC FILES
+# STATIC FILES (RENDER FIX)
 # =========================
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = []
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# WhiteNoise compression (recommended)
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
 # =========================
-# DEFAULT PRIMARY KEY
+# DEFAULT PK
 # =========================
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = "hospital.User"
-
