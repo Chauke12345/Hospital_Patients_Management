@@ -139,48 +139,41 @@
 
 
 <!-- FORM -->
-<div class="form-card">
-    <form method="POST">
-        {% csrf_token %}
+<form method="POST">
+  {% csrf_token %}
 
-       <!-- PATIENT SELECTION -->
-<!-- PATIENT DROPDOWN -->
-<label>Patient</label>
-<select name="patient" required>
-    <option value="">Select Patient</option>
-
+  <!-- PATIENT DROPDOWN -->
+  <label>Patient</label>
+  <select name="patient">
     {% for patient in patients %}
-        <option value="{{ patient.id }}">
-            {{ patient.name }}
-        </option>
+      <option value="{{ patient.id }}">
+        {{ patient.name }}
+        {% if patient.is_inpatient %}(Admitted){% endif %}
+      </option>
     {% endfor %}
-</select>
+  </select>
 
-<!-- DOCTOR DROPDOWN -->
-<label>Doctor</label>
-<select name="doctor" required>
-    <option value="">Select Doctor</option>
+  <label>Doctor</label>
 
-    {% for doctor in doctors %}
-        <option value="{{ doctor.id }}">
-            Dr. {{ doctor.first_name }} {{ doctor.last_name }}
-        </option>
-    {% endfor %}
-</select>
-        <!-- DATE -->
-        <label>Date</label>
-        <input type="date" name="date" required>
+<select name="doctor">
+  {% for doctor in doctors %}
+    <option value="{{ doctor.id }}">
+      {{ doctor }}
+    </option>
+  {% endfor %}
+</select>>
 
-        <!-- TIME -->
-        <label>Time</label>
-        <input type="time" name="time" required>
+  <!-- DATE -->
+  <input type="date" name="date">
 
-        <!-- REASON -->
-        <label>Reason (optional)</label>
-        <input type="text" name="reason">
+  <!-- TIME -->
+  <input type="time" name="time">
 
-        <button type="submit">Book Appointment</button>
-    </form>
+  <!-- REASON -->
+  <input type="text" name="reason">
+
+  <button type="submit">Book Appointment</button>
+</form>
 </div>
 
 <!-- TABLE -->

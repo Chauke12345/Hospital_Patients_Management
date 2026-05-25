@@ -222,6 +222,8 @@
     Dashboard
 </a>
 
+
+
 <a href="{% url 'reception' %}">
     <i class="bi bi-person-plus-fill"></i>
     Admission
@@ -286,23 +288,39 @@
 
     <div class="topbar">
 
-        <div>
+    <div>
+        <h3 class="fw-bold mb-0">
+            Hospital Dashboard
+        </h3>
 
-            <h3 class="fw-bold mb-0">
-                Hospital Dashboard
-            </h3>
+        <small class="text-muted">
+            Central hospital management overview
+        </small>
+    </div>
 
-            <small class="text-muted">
-                Central hospital management overview
-            </small>
+    <div class="d-flex align-items-center gap-3">
 
-        </div>
-
+        <!-- Search -->
         <div class="search-box">
             <input type="text" placeholder="Search patients, doctors, records...">
         </div>
 
+        <!-- AUTH BUTTONS -->
+        <div class="d-flex gap-2">
+
+            <a href="{% url 'login' %}" class="btn btn-outline-primary btn-sm">
+                Login
+            </a>
+
+            <a href="{% url 'signup' %}" class="btn btn-primary btn-sm">
+                Sign Up
+            </a>
+
+        </div>
+
     </div>
+
+</div>
 
     <!-- HERO -->
 

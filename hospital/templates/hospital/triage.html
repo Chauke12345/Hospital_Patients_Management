@@ -1,0 +1,50 @@
+<div class="container mt-4">
+
+    <h2 class="fw-bold mb-3">TRIAGE FORM</h2>
+
+    <!-- patient is passed from backend -->
+    <h5 class="mb-4">
+        Patient: {{ patient.name }}
+    </h5>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <label class="form-label">Emergency Type</label>
+        <input type="text"
+               name="emergency_type"
+               class="form-control mb-3"
+               placeholder="e.g. Accident, Heart Attack">
+
+        <label class="form-label">Severity</label>
+        <select name="severity" class="form-control mb-3">
+            <option>Low</option>
+            <option>Medium</option>
+            <option>Critical</option>
+        </select>
+
+        <label class="form-label">Description</label>
+        <textarea name="description"
+                  class="form-control mb-3"
+                  placeholder="Enter details..."></textarea>
+
+        <!-- ONLY DOCTOR DROPDOWN (as you wanted) -->
+        <label class="form-label">Assign Doctor</label>
+        <select name="doctor" class="form-control mb-3">
+            {% for doctor in doctors %}
+                <option value="{{ doctor.id }}">
+                    {{ doctor.name }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit" class="btn btn-danger w-100">
+            Create Emergency Case
+        </button>
+    </form>
+
+    <a href="{% url 'emergency_list' %}" class="btn btn-link mt-3">
+        ⬅ Back to Dashboard
+    </a>
+
+</div>

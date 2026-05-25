@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
     <meta charset="UTF-8">
     <title>Create Emergency</title>
 
@@ -33,18 +32,11 @@
             border: none;
             border-radius: 16px;
             box-shadow: 0 12px 30px rgba(0,0,0,0.08);
-            overflow: hidden;
-        }
-
-        .card h4 {
-            font-weight: 700;
-            color: #333;
         }
 
         .form-control, select, textarea {
             border-radius: 10px;
             border: 1px solid #e0e0e0;
-            transition: 0.2s ease-in-out;
         }
 
         .form-control:focus, select:focus, textarea:focus {
@@ -59,12 +51,26 @@
             padding: 12px;
             background: linear-gradient(135deg, #dc3545, #b30000);
             border: none;
-            transition: 0.2s ease-in-out;
         }
 
         .btn-danger:hover {
             transform: translateY(-1px);
             box-shadow: 0 6px 14px rgba(220, 53, 69, 0.25);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #444;
+        }
+
+        .unit-tag {
+            font-size: 12px;
+            background: #f1f3f5;
+            padding: 4px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 10px;
+            color: #666;
         }
 
         .back-btn {
@@ -77,22 +83,6 @@
 
         .back-btn:hover {
             color: #dc3545;
-        }
-
-        .form-label {
-            font-weight: 600;
-            color: #444;
-        }
-
-        /* Small hospital badge feel */
-        .unit-tag {
-            font-size: 12px;
-            background: #f1f3f5;
-            padding: 4px 10px;
-            border-radius: 20px;
-            display: inline-block;
-            margin-bottom: 10px;
-            color: #666;
         }
     </style>
 </head>
@@ -111,39 +101,63 @@
             <span class="unit-tag">TRIAGE FORM</span>
         </div>
 
-        <h4 class="text-center mb-3">Create Emergency Case</h4>
+        <h4 class="text-center mb-4">Create Emergency Case</h4>
 
         <form method="POST">
             {% csrf_token %}
 
+            <!-- Patient -->
             <div class="mb-3">
-                <label class="form-label">Patient</label>
-                <select name="patient" class="form-control" required>
-                    <option value="">Select Patient</option>
-                    {% for p in patients %}
-                        <option value="{{ p.id }}">{{ p.name }}</option>
+                <label class="form-label">Patient Name</label>
+                <input type="text" name="patient" class="form-control" required>
+            </div>
+
+            <!-- Doctor -->
+            <div class="mb-3">
+                <label class="form-label">Doctor</label>
+                <select name="doctor" class="form-control" required>
+                    <option value="">Select Doctor</option>
+                    {% for d in doctors %}
+                        <option value="{{ d.id }}">{{ d }}</option>
                     {% endfor %}
                 </select>
             </div>
 
+            <!-- Emergency Type -->
             <div class="mb-3">
                 <label class="form-label">Emergency Type</label>
-                <input type="text" name="emergency_type" class="form-control" placeholder="e.g. Accident, Heart Attack">
+                <input type="text" name="emergency_type" class="form-control">
             </div>
 
+            <!-- Severity -->
             <div class="mb-3">
                 <label class="form-label">Severity</label>
                 <input type="text" name="severity" class="form-control" placeholder="Low / Medium / Critical">
             </div>
 
+            <!-- Description -->
             <div class="mb-3">
                 <label class="form-label">Description</label>
-                <textarea name="description" class="form-control" rows="4" placeholder="Enter details..."></textarea>
+                <textarea name="description" class="form-control" rows="4"></textarea>
             </div>
+
+            <!-- Ward (optional) -->
+            {% if wards %}
+                <div class="mb-3">
+                    <label class="form-label">Ward</label>
+                    <select name="ward" class="form-control">
+                        <option value="">Select Ward</option>
+                        {% for ward in wards %}
+                            <option value="{{ ward.id }}">{{ ward.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            {% endif %}
 
             <button type="submit" class="btn btn-danger">
                 🚨 Save Emergency
             </button>
+
         </form>
 
         <a href="/dashboard/" class="back-btn text-muted">

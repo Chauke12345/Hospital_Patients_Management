@@ -29,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-dev-only-key")
 
 # 🔥 IMPORTANT: DEBUG must be False on Render
-DEBUG = os.environ.get("DEBUG", "False") == "True"
+DEBUG =True
 
 
 # Render provides this automatically
@@ -160,4 +160,8 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = "hospital.User"
+
+
+LOGIN_REDIRECT_URL = "dashboard"
+LOGOUT_REDIRECT_URL = "login"
+LOGIN_URL = "login"

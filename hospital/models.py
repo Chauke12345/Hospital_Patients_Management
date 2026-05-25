@@ -2,26 +2,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
-# =========================
-# USER MODEL
-# =========================
-class User(AbstractUser):
 
-    ROLE_CHOICES = (
-        ('ADMIN', 'Admin'),
-        ('DOCTOR', 'Doctor'),
-        ('RECEPTIONIST', 'Receptionist'),
-        ('PHARMACIST', 'Pharmacist'),
-    )
 
-    role = models.CharField(
-        max_length=20,
-        choices=ROLE_CHOICES,
-        default='RECEPTIONIST'
-    )
-
-    def __str__(self):
-        return self.username
 
 
 # =========================
@@ -111,19 +93,11 @@ class Patient(models.Model):
 # APPOINTMENT MODEL
 # =========================
 class Appointment(models.Model):
-
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name="appointments")
-
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
     date = models.DateField()
     time = models.TimeField()
-    reason = models.TextField(blank=True, null=True)
-
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.patient} → {self.doctor} ({self.date})"
-
+    reason = models.TextField()
 
 # =========================
 # PRESCRIPTION MODEL
@@ -165,20 +139,22 @@ class Emergency(models.Model):
         related_name="emergencies"
     )
 
+    doctor = models.ForeignKey(
+        "Doctor",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+
     emergency_type = models.CharField(max_length=100)
     severity = models.CharField(max_length=50)
-
     description = models.TextField(blank=True, null=True)
-
     status = models.CharField(max_length=50, default="Pending")
-
     is_admitted = models.BooleanField(default=False)
-
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.patient.name} - {self.emergency_type}"
-
 
 # =========================
 # ADMISSION MODEL
@@ -186,6 +162,13 @@ class Emergency(models.Model):
 class Admission(models.Model):
 
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+
+    doctor = models.ForeignKey(
+        Doctor,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
 
     emergency = models.ForeignKey(
         Emergency,
