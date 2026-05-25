@@ -30,9 +30,10 @@ urlpatterns = [
     path("reception/", views.reception, name="reception"),
     path("reception/edit/<int:pk>/", views.edit_patient, name="edit_patient"),
 
-    path("patients/", views.patient_list, name="patients_list"),
+    
     path("patients/delete/<int:pk>/", views.delete_patient, name="delete_patient"),
     path("discharge/<int:pk>/", views.discharge_patient, name="discharge_patient"),
+    path("patients/", views.patient_list, name="patient_list"),
 
     # =========================
     # DOCTORS

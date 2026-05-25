@@ -5,6 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from django.http import HttpResponse
 
 from .models import (
     Admission,
@@ -21,17 +22,14 @@ from .models import (
 # DASHBOARD
 # =========================
 def dashboard(request):
-    return render(
-        request,
-        "hospital/dashboard.html",
-        {
-            "total_patients": Patient.objects.count(),
-            "total_doctors": Doctor.objects.count(),
-            "total_appointments": Appointment.objects.count(),
-            "emergency_count": Emergency.objects.count(),
-        },
-    )
+    context = {
+        "patients": Patient.objects.count(),
+        "doctors": Doctor.objects.count(),
+        "appointments": Appointment.objects.count(),
+        "emergency": Emergency.objects.count(),
+    }
 
+    return render(request, "hospital/dashboard.html", context)
 # =========================
 # PATIENTS
 # =========================
