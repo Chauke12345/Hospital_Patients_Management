@@ -17,12 +17,16 @@ from .models import (
 # DASHBOARD
 # =========================
 def dashboard(request):
-    return render(request, "hospital/dashboard.html", {
-        "total_patients": Patient.objects.count(),
-        "total_doctors": Doctor.objects.count(),
-        "total_appointments": Appointment.objects.count(),
-        "emergency_count": Emergency.objects.count(),
-    })
+    try:
+        data = {
+            "patients": Patient.objects.count(),
+            "doctors": Doctor.objects.count(),
+            "appointments": Appointment.objects.count(),
+            "emergency": Emergency.objects.count(),
+        }
+        return HttpResponse(str(data))
+    except Exception as e:
+        return HttpResponse(f"ERROR: {e}")
 # =========================
 # PATIENTS
 # =========================
