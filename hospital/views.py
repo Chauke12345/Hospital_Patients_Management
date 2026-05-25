@@ -19,11 +19,11 @@ from .models import (
 # DASHBOARD
 # =========================
 from django.http import HttpResponse
-from .models import Patient
+from .models import Doctor
 
 def dashboard(request):
-    Patient.objects.all()
-    return HttpResponse("PATIENT OK")
+    Doctor.objects.count()
+    return HttpResponse("DOCTOR OK")
 # =========================
 # PATIENTS
 # =========================
