@@ -21,8 +21,6 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-
-    # hospital app handles everything
-    path('', include('hospital.urls')),
+    path("admin/", admin.site.urls),
+    path("", include("hospital.urls")),
 ]
