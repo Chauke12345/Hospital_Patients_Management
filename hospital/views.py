@@ -1,8 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
-
-from django.contrib.auth import authenticate
-from django.contrib.auth import login as auth_login
+from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.forms import UserCreationForm
 
 from .models import (
@@ -18,10 +16,13 @@ from .models import (
 # =========================
 # DASHBOARD
 # =========================
-from django.http import HttpResponse
-
 def dashboard(request):
-    return HttpResponse("DASHBOARD WORKING")
+    return render(request, "hospital/dashboard.html", {
+        "total_patients": Patient.objects.count(),
+        "total_doctors": Doctor.objects.count(),
+        "total_appointments": Appointment.objects.count(),
+        "emergency_count": Emergency.objects.count(),
+    })
 # =========================
 # PATIENTS
 # =========================
