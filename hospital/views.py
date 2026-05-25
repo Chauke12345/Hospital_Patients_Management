@@ -461,3 +461,17 @@ class EmergencyForm(forms.ModelForm):
             "severity",
             "description",
         ]
+
+        # =========================
+# DOCTORS
+# =========================
+def doctor_list(request):
+    doctors = Doctor.objects.all()
+
+    return render(
+        request,
+        "hospital/doctor_list.html",
+        {
+            "doctors": doctors,
+        },
+    )
