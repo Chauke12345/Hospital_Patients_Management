@@ -59,8 +59,8 @@ urlpatterns = [
     # =========================
     path("emergencies/", views.emergency_list, name="emergency_list"),
     path("emergencies/create/", views.create_emergency, name="create_emergency"),
-    path("emergencies/edit/<int:pk>/", views.edit_emergency, name="edit_emergency"),
-    path("emergencies/admit/<int:pk>/", views.admit_patient, name="admit_patient"),
+    path("emergencies/edit/<int:id>/", views.edit_emergency, name="edit_emergency"),
+    path("emergencies/admit/<int:id>/", views.admit_patient, name="admit_patient"),
 
    
    
