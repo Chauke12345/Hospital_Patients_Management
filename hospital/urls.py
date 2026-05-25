@@ -37,8 +37,9 @@ urlpatterns = [
     # =========================
     # DOCTORS
     # =========================
+    path("", views.dashboard, name="dashboard"),
     path("doctors/", views.doctor_list, name="doctor_list"),
-
+    path("patients/", views.patient_list, name="patient_list"),
     # =========================
     # APPOINTMENTS
     # =========================
@@ -60,4 +61,7 @@ urlpatterns = [
     path("emergencies/create/", views.create_emergency, name="create_emergency"),
     path("emergencies/edit/<int:pk>/", views.edit_emergency, name="edit_emergency"),
     path("emergencies/admit/<int:pk>/", views.admit_patient, name="admit_patient"),
+
+   
+   
 ]
