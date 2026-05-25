@@ -18,6 +18,7 @@ Django settings for config project.
 """
 from pathlib import Path
 import os
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -28,22 +29,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-dev-only-key")
 
-# 🔥 IMPORTANT: DEBUG must be False on Render
-DEBUG =True
+# Production-safe DEBUG
+DEBUG = os.environ.get("DEBUG", "False") == "True"
 
-
-# Render provides this automatically
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
-    ".onrender.com",   # ✅ REQUIRED for Render
+    ".onrender.com",
 ]
-
 
 CSRF_TRUSTED_ORIGINS = [
     "https://*.onrender.com",
-    "http://127.0.0.1:8000",
-    "http://localhost:8000",
 ]
 
 
@@ -68,7 +64,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # ✅ REQUIRED for Render static files
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -105,19 +102,13 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # =========================
-# DATABASE (RENDER FIX)
+# DATABASE (RENDER READY)
 # =========================
-# Render uses Postgres, NOT SQLite
 
 DATABASES = {
-    "default": {
-        "ENGINE": os.environ.get("DB_ENGINE", "django.db.backends.sqlite3"),
-        "NAME": os.environ.get("DB_NAME", BASE_DIR / "db.sqlite3"),
-        "USER": os.environ.get("DB_USER", ""),
-        "PASSWORD": os.environ.get("DB_PASSWORD", ""),
-        "HOST": os.environ.get("DB_HOST", ""),
-        "PORT": os.environ.get("DB_PORT", ""),
-    }
+    "default": dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}"
+    )
 }
 
 
@@ -144,23 +135,23 @@ USE_TZ = True
 
 
 # =========================
-# STATIC FILES (RENDER FIX)
+# STATIC FILES (RENDER SAFE)
 # =========================
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-# WhiteNoise compression (recommended)
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
 
 # =========================
-# DEFAULT PK
+# DEFAULT PRIMARY KEY
 # =========================
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+# =========================
+# AUTH REDIRECTS
+# =========================
 
 LOGIN_REDIRECT_URL = "dashboard"
 LOGOUT_REDIRECT_URL = "login"
