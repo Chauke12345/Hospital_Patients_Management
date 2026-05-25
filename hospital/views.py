@@ -18,18 +18,10 @@ from .models import (
 # =========================
 # DASHBOARD
 # =========================
+from django.http import HttpResponse
+
 def dashboard(request):
-    patients = Patient.objects.all()
-
-    return render(request, "hospital/dashboard.html", {
-        "patients": patients,
-        "total_patients": patients.count(),
-        "total_doctors": Doctor.objects.count(),
-        "total_appointments": Appointment.objects.count(),
-        "emergency_count": Emergency.objects.count(),
-    })
-
-
+    return HttpResponse("IT WORKS")
 # =========================
 # PATIENTS
 # =========================
