@@ -21,12 +21,15 @@ from .models import (
 # =========================
 # DASHBOARD
 # =========================
+from .models import Patient
+
 def dashboard(request):
+    patients = Patient.objects.all()
+    patient_count = patients.count()
+
     context = {
-        "patients": Patient.objects.count(),
-        "doctors": Doctor.objects.count(),
-        "appointments": Appointment.objects.count(),
-        "emergency": Emergency.objects.count(),
+        "patients": patients,
+        "patient_count": patient_count,
     }
 
     return render(request, "hospital/dashboard.html", context)
