@@ -1,16 +1,10 @@
 from django.contrib import admin
 from django.urls import path
 from django.contrib.auth import views as auth_views
-
 from hospital import views
 
-
 urlpatterns = [
-    # =========================
-    # ADMIN
-    # =========================
-    path("admin/", admin.site.urls),
-
+   
     # =========================
     # AUTH
     # =========================
@@ -29,8 +23,6 @@ urlpatterns = [
     # =========================
     path("reception/", views.reception, name="reception"),
     path("reception/edit/<int:pk>/", views.edit_patient, name="edit_patient"),
-
-    
     path("patients/delete/<int:pk>/", views.delete_patient, name="delete_patient"),
     path("discharge/<int:pk>/", views.discharge_patient, name="discharge_patient"),
     path("patients/", views.patient_list, name="patient_list"),
@@ -38,9 +30,8 @@ urlpatterns = [
     # =========================
     # DOCTORS
     # =========================
-    path("", views.dashboard, name="dashboard"),
     path("doctors/", views.doctor_list, name="doctor_list"),
-    path("patients/", views.patient_list, name="patient_list"),
+
     # =========================
     # APPOINTMENTS
     # =========================
@@ -62,7 +53,4 @@ urlpatterns = [
     path("emergencies/create/", views.create_emergency, name="create_emergency"),
     path("emergencies/edit/<int:id>/", views.edit_emergency, name="edit_emergency"),
     path("emergencies/admit/<int:id>/", views.admit_patient, name="admit_patient"),
-
-   
-   
 ]
