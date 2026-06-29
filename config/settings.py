@@ -26,25 +26,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # =========================
 # SECURITY
 # =========================
+import os
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-dev-only-key")
 
-# Production-safe DEBUG
-import os
+DEBUG = False
 
-DEBUG = os.getenv("DEBUG", "False") == "True"
-
-ALLOWED_HOSTS = [
-    "127.0.0.1",
-    "localhost",
-    ".onrender.com",
-]
-
-CSRF_TRUSTED_ORIGINS = [
-    "https://*.onrender.com",
-]
-
-
+ALLOWED_HOSTS = ["chauke12345.pythonanywhere.com"]
 # =========================
 # APPS
 # =========================
@@ -145,9 +133,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / "staticfiles"
-
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
 # =========================
 # DEFAULT PRIMARY KEY
 # =========================

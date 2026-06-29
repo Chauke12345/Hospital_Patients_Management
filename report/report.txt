@@ -1,0 +1,91 @@
+📄 PROJECT REPORT: Hospital Sync Management System
+1. Title Page
+Project Title: Hospital Sync Management System
+Student Name: [Miehleketo E Chauke]
+Student Number: [Your Number]
+Institution: [School Name]
+Subject: [Subject Name]
+Date: 2026
+________________________________________
+2. Introduction
+The Hospital Sync Management System is a web-based application developed using the Django framework. The purpose of the system is to manage hospital operations such as patient records, appointments, and administrative tasks in a centralized and efficient manner.
+Traditional hospital record systems are often manual or fragmented, leading to delays, errors, and inefficiencies. This system aims to improve data management by providing a digital solution that allows secure and structured access to hospital information.
+________________________________________
+3. Problem Statement
+Hospitals often face challenges such as:
+•	Inefficient patient record management 
+•	Data duplication and loss 
+•	Difficulty in tracking appointments and medical history 
+•	Lack of centralized system for staff and admin use 
+This project addresses these issues by developing a centralized web application for managing hospital data efficiently.
+________________________________________
+4. Objectives
+The main objectives of this project are:
+•	To develop a centralized hospital management system 
+•	To allow secure login for administrators 
+•	To manage patient records efficiently 
+•	To provide an easy-to-use interface for hospital staff 
+•	To reduce manual paperwork and errors 
+________________________________________
+5. Tools and Technologies Used
+•	Programming Language: Python 
+•	Web Framework: Django 
+•	Database: SQLite 
+•	Frontend: HTML, CSS (Django Templates) 
+•	Deployment Platform: PythonAnywhere 
+•	Version Control: Git/GitHub (if used) 
+________________________________________
+6. System Design
+The system follows the MVC (Model-View-Controller) architecture used by Django:
+•	Models: Define database structure (patients, appointments, etc.) 
+•	Views: Handle logic and processing 
+•	Templates: Display data to users 
+Architecture Flow:
+User → View (Django) → Model (Database) → Response → Template
+________________________________________
+7. Features of the System
+•	User authentication (login/logout) 
+•	Admin dashboard 
+•	Patient management system 
+•	Appointment tracking 
+•	Secure database storage 
+•	Web-based access from any device 
+________________________________________
+8. Implementation
+The system was developed using Django and deployed on PythonAnywhere. The backend handles all data operations, while the frontend uses Django templates for rendering pages.
+Key steps in implementation:
+•	Setting up Django project 
+•	Creating hospital app 
+•	Defining models and migrations 
+•	Creating views and URLs 
+•	Implementing authentication system 
+•	Deploying on PythonAnywhere 
+________________________________________
+9. Deployment
+The system was deployed using PythonAnywhere, a cloud hosting platform for Python applications.
+Steps included:
+•	Uploading project files 
+•	Configuring WSGI file 
+•	Setting ALLOWED_HOSTS 
+•	Running migrations on server 
+•	Collecting static files 
+The live application is accessible via:
+👉 http://miehleketo.pythonanywhere.com
+________________________________________
+10. Challenges Faced
+•	Configuring WSGI file correctly on PythonAnywhere 
+•	Resolving DisallowedHost error 
+•	Handling static files in production 
+•	Debugging deployment errors 
+These challenges were resolved through configuration adjustments and testing.
+________________________________________
+11. Conclusion
+The Hospital Sync Management System successfully demonstrates how a web-based application can be used to manage hospital operations efficiently. The system reduces manual work, improves data accuracy, and provides a centralized platform for hospital management.
+________________________________________
+12. Future Improvements
+•	Add mobile application version 
+•	Use PostgreSQL for scalability 
+•	Add email/SMS notifications for appointments 
+•	Improve UI/UX design 
+•	Add reporting and analytics dashboard 
+
