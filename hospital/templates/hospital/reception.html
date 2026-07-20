@@ -206,18 +206,33 @@
                     </div>
 
                     <!-- WARD -->
-                    <div class="mb-3">
+                   <div class="mb-3">
 
-                        <label class="form-label">
-                            Ward / Room
-                        </label>
+    <label class="form-label">
+        Ward / Room
+    </label>
 
-                        <input type="text"
-                               name="ward"
-                               class="form-control"
-                               placeholder="e.g. Ward 3B"
-                               value="{{ edit_patient.ward }}">
-                    </div>
+    <select name="ward" class="form-control">
+
+        <option value="">
+            Select Ward
+        </option>
+
+        {% for ward in wards %}
+
+            <option value="{{ ward.id }}"
+                {% if edit_patient.ward and edit_patient.ward.id == ward.id %}
+                    selected
+                {% endif %}
+            >
+                {{ ward.name }}
+            </option>
+
+        {% endfor %}
+
+    </select>
+
+</div>
 
                     <!-- PRIORITY -->
                     <div class="mb-3">
