@@ -131,13 +131,15 @@ def admit_patient(request, id):
 # RECEPTION
 # =========================
 def reception(request):
+
     doctors = Doctor.objects.all()
     patients = Patient.objects.all()
 
     if request.method == "POST":
+
         doctor_id = request.POST.get("doctor")
         patient_id = request.POST.get("patient_id")
-        ward_name = request.POST.get("ward")
+        ward_id = request.POST.get("ward")
 
         if not doctor_id:
             return render(
@@ -146,30 +148,38 @@ def reception(request):
                 {
                     "doctors": doctors,
                     "patients": patients,
+                    "wards": Ward.objects.all(),
                     "error": "Please select a doctor",
                 },
             )
 
-        doctor = get_object_or_404(Doctor, pk=doctor_id)
-
-        patient = (
-            get_object_or_404(Patient, pk=patient_id)
-            if patient_id
-            else Patient()
-        )
-
-        ward = Ward.objects.filter(name=ward_name).first()
-
-        if not ward:
+        if not ward_id:
             return render(
                 request,
                 "hospital/reception.html",
                 {
                     "doctors": doctors,
                     "patients": patients,
-                    "error": "Selected ward does not exist",
+                    "wards": Ward.objects.all(),
+                    "error": "Please select a ward",
                 },
             )
+
+        doctor = get_object_or_404(
+            Doctor,
+            pk=doctor_id
+        )
+
+        ward = get_object_or_404(
+            Ward,
+            pk=ward_id
+        )
+
+        patient = (
+            get_object_or_404(Patient, pk=patient_id)
+            if patient_id
+            else Patient()
+        )
 
         patient.name = request.POST.get("name")
         patient.age = request.POST.get("age")
@@ -185,16 +195,16 @@ def reception(request):
 
         return redirect("reception")
 
+
     return render(
         request,
         "hospital/reception.html",
         {
             "doctors": doctors,
             "patients": patients,
+            "wards": Ward.objects.all(),
         },
     )
-
-
 # =========================
 # APPOINTMENTS
 # =========================
