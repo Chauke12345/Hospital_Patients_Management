@@ -2,7 +2,6 @@ from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.forms import UserCreationForm
-from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.http import HttpResponse
@@ -134,6 +133,7 @@ def reception(request):
 
     doctors = Doctor.objects.all()
     patients = Patient.objects.all()
+    wards = Ward.objects.all()
 
     if request.method == "POST":
 
@@ -148,7 +148,7 @@ def reception(request):
                 {
                     "doctors": doctors,
                     "patients": patients,
-                    "wards": Ward.objects.all(),
+                    "wards": wards,
                     "error": "Please select a doctor",
                 },
             )
@@ -160,7 +160,7 @@ def reception(request):
                 {
                     "doctors": doctors,
                     "patients": patients,
-                    "wards": Ward.objects.all(),
+                    "wards": wards,
                     "error": "Please select a ward",
                 },
             )
@@ -202,7 +202,7 @@ def reception(request):
         {
             "doctors": doctors,
             "patients": patients,
-            "wards": Ward.objects.all(),
+            "wards": wards,
         },
     )
 # =========================
@@ -458,7 +458,6 @@ def login_view(request):
         },
     )
 
-
 # =========================
 # FORMS
 # =========================
@@ -473,10 +472,12 @@ class EmergencyForm(forms.ModelForm):
             "description",
         ]
 
-        # =========================
+# =========================
 # DOCTORS
 # =========================
 def doctor_list(request):
+    doctors = Doctor.objects.all()
+
     doctors = Doctor.objects.all()
 
     return render(

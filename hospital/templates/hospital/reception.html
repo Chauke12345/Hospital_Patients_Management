@@ -52,245 +52,399 @@
             padding: 6px 10px;
             border-radius: 8px;
         }
-    </style>
+  </style>
 </head>
 
 <body class="container mt-4">
 
     <!-- HEADER -->
     <div class="header d-flex justify-content-between align-items-center mb-4">
-        <h3 class="mb-0">Hospital Sync</h3>
+
+        <h3 class="mb-0">
+            Hospital Sync
+        </h3>
 
         <div>
             <a href="/dashboard/" class="btn btn-light">
                 Dashboard
             </a>
         </div>
+
     </div>
 
+
     <div class="row g-4">
+
 
         <!-- ADMIT FORM -->
         <div class="col-md-5">
 
             <div class="card shadow p-4">
 
+
                 <h4 class="section-title mb-3">
+
                     {% if edit_patient %}
                         Update Patient
                     {% else %}
                         Admit New Patient
                     {% endif %}
+
                 </h4>
 
+
+
                 <form method="POST" action="{% url 'reception' %}">
+
                     {% csrf_token %}
 
+
+
                     {% if edit_patient %}
-                        <input type="hidden"
-                               name="patient_id"
-                               value="{{ edit_patient.id }}">
+
+                    <input type="hidden"
+                           name="patient_id"
+                           value="{{ edit_patient.id }}">
+
                     {% endif %}
 
+
+
                     <!-- NAME -->
+
                     <div class="mb-3">
+
                         <label class="form-label">
                             Patient Full Name
                         </label>
+
 
                         <input type="text"
                                name="name"
                                class="form-control"
                                placeholder="e.g. John Smith"
-                               value="{{ edit_patient.name }}"
+                               value="{{ edit_patient.name|default:'' }}"
                                required>
+
                     </div>
 
+
+
+
                     <!-- AGE -->
+
                     <div class="mb-3">
+
                         <label class="form-label">
                             Age
                         </label>
+
 
                         <input type="number"
                                name="age"
                                class="form-control"
                                placeholder="Enter age"
-                               value="{{ edit_patient.age }}"
+                               value="{{ edit_patient.age|default:'' }}"
                                required>
+
                     </div>
 
+
+
+
                     <!-- GENDER -->
+
                     <div class="mb-3">
+
                         <label class="form-label">
                             Gender
                         </label>
+
 
                         <select name="gender"
                                 class="form-select"
                                 required>
 
+
                             <option value=""
                                 disabled
-                                {% if not edit_patient %}selected{% endif %}>
+                                {% if not edit_patient %}
+                                selected
+                                {% endif %}>
                                 Select gender
                             </option>
 
+
                             <option value="Male"
-                                {% if edit_patient.gender == "Male" %}
-                                    selected
-                                {% endif %}>
+                            {% if edit_patient and edit_patient.gender == "Male" %}
+                                selected
+                            {% endif %}>
                                 Male
                             </option>
 
+
                             <option value="Female"
-                                {% if edit_patient.gender == "Female" %}
-                                    selected
-                                {% endif %}>
+                            {% if edit_patient and edit_patient.gender == "Female" %}
+                                selected
+                            {% endif %}>
                                 Female
                             </option>
 
+
                             <option value="Other"
-                                {% if edit_patient.gender == "Other" %}
-                                    selected
-                                {% endif %}>
+                            {% if edit_patient and edit_patient.gender == "Other" %}
+                                selected
+                            {% endif %}>
                                 Other
                             </option>
 
+
                         </select>
+
                     </div>
 
+
+
+
+
                     <!-- PHONE -->
+
                     <div class="mb-3">
+
                         <label class="form-label">
                             Phone Number
                         </label>
+
 
                         <input type="text"
                                name="phone"
                                class="form-control"
                                placeholder="+27 82 123 4567"
-                               value="{{ edit_patient.phone }}">
+                               value="{{ edit_patient.phone|default:'' }}">
+
                     </div>
 
+
+
+
+
                     <!-- DOCTOR -->
+
                     <div class="mb-3">
 
                         <label class="form-label">
                             Assign Doctor
                         </label>
 
+
                         <select name="doctor"
                                 class="form-select"
                                 required>
 
+
                             <option value=""
                                 disabled
-                                {% if not edit_patient %}selected{% endif %}>
+                                {% if not edit_patient %}
+                                selected
+                                {% endif %}>
                                 Select doctor
                             </option>
 
+
+
                             {% for d in doctors %}
-                                <option value="{{ d.id }}"
-                                    {% if edit_patient and edit_patient.doctor and edit_patient.doctor.id == d.id %}
-                                        selected
-                                    {% endif %}>
 
-                                    Dr. {{ d.first_name }} {{ d.last_name }}
-                                    — {{ d.specialization }}
+                            <option value="{{ d.id }}"
 
-                                </option>
+                            {% if edit_patient and edit_patient.doctor and edit_patient.doctor.id == d.id %}
+                                selected
+                            {% endif %}
+
+                            >
+
+                                Dr. {{ d.first_name }} {{ d.last_name }}
+                                - {{ d.specialization }}
+
+                            </option>
+
+
+                            {% empty %}
+
+                            <option disabled>
+                                No doctors available
+                            </option>
+
+
                             {% endfor %}
 
-              
-<!-- WARD -->
-<div class="mb-3">
 
-    <label class="form-label">
-        Ward / Room
-    </label>
+                        </select>
 
-    <select name="ward" class="form-select" required>
 
-        <option value="" selected disabled>
-            Select Ward
-        </option>
+                    </div>
 
-        {% for ward in wards %}
 
-            <option value="{{ ward.id }}">
-                {{ ward.name }}
-            </option>
 
-        {% empty %}
 
-            <option disabled>
-                No wards available
-            </option>
 
-        {% endfor %}
 
-    </select>
 
-</div>
+                    <!-- WARD -->
 
-</div>
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Ward / Room
+                        </label>
+
+
+
+                        <select name="ward"
+                                class="form-select"
+                                required>
+
+
+                            <option value=""
+                                disabled
+                                {% if not edit_patient %}
+                                selected
+                                {% endif %}>
+                                Select Ward
+                            </option>
+
+
+
+
+                            {% for ward in wards %}
+
+
+                            <option value="{{ ward.id }}"
+
+                            {% if edit_patient and edit_patient.ward and edit_patient.ward.id == ward.id %}
+                                selected
+                            {% endif %}
+
+                            >
+
+                                {{ ward.name }}
+
+                            </option>
+
+
+
+                            {% empty %}
+
+                            <option disabled>
+                                No wards available
+                            </option>
+
+
+                            {% endfor %}
+
+
+
+                        </select>
+
+
+                    </div>
+
+
+
+
+
+
 
                     <!-- PRIORITY -->
+
+
                     <div class="mb-3">
 
                         <label class="form-label">
                             Priority Level
                         </label>
 
+
                         <select name="priority"
                                 class="form-select">
 
+
                             <option value=""
                                 disabled
-                                {% if not edit_patient %}selected{% endif %}>
+                                {% if not edit_patient %}
+                                selected
+                                {% endif %}>
                                 Select priority
                             </option>
 
+
+
                             <option value="Normal"
-                                {% if edit_patient.priority == "Normal" %}
-                                    selected
-                                {% endif %}>
+                            {% if edit_patient and edit_patient.priority == "Normal" %}
+                                selected
+                            {% endif %}>
                                 Normal
                             </option>
 
+
+
                             <option value="High"
-                                {% if edit_patient.priority == "High" %}
-                                    selected
-                                {% endif %}>
+                            {% if edit_patient and edit_patient.priority == "High" %}
+                                selected
+                            {% endif %}>
                                 High
                             </option>
 
+
+
                             <option value="Emergency"
-                                {% if edit_patient.priority == "Emergency" %}
-                                    selected
-                                {% endif %}>
+                            {% if edit_patient and edit_patient.priority == "Emergency" %}
+                                selected
+                            {% endif %}>
                                 Emergency
                             </option>
 
+
+
                         </select>
+
+
                     </div>
 
+
+
+
+
+
+
                     <!-- REASON -->
+
+
                     <div class="mb-3">
+
 
                         <label class="form-label">
                             Reason for Admission
                         </label>
 
+
                         <textarea name="reason"
                                   class="form-control"
                                   rows="3"
-                                  placeholder="Describe symptoms or condition...">{{ edit_patient.reason }}</textarea>
+                                  placeholder="Describe symptoms or condition...">{{ edit_patient.reason|default:'' }}</textarea>
+
+
                     </div>
 
+
+
+
+
+
                     <!-- BUTTON -->
+
+
                     <button class="btn btn-primary w-100 py-2">
+
 
                         {% if edit_patient %}
                             Update Patient
@@ -298,106 +452,204 @@
                             Admit Patient
                         {% endif %}
 
+
                     </button>
+
+
 
                 </form>
 
+
             </div>
+
         </div>
 
+
+
+
+
+
+
         <!-- PATIENT LIST -->
+
+
         <div class="col-md-7">
 
+
             <div class="card shadow p-4">
+
 
                 <h4 class="section-title mb-3">
                     Admitted Patients
                 </h4>
 
+
+
+
                 <table class="table table-hover align-middle">
 
+
                     <thead class="table-light">
+
                         <tr>
+
                             <th>Name</th>
                             <th>Doctor</th>
                             <th>Priority</th>
                             <th>Status</th>
                             <th>Actions</th>
+
                         </tr>
+
                     </thead>
+
+
+
+
 
                     <tbody>
 
-                        {% for p in patients %}
-                        <tr>
 
-                            <td>
-                                <strong>{{ p.name }}</strong>
-                            </td>
+                    {% for p in patients %}
 
-                            <td>
-                                {% if p.doctor %}
-                                    Dr. {{ p.doctor.first_name }} {{ p.doctor.last_name }}
-                                {% else %}
-                                    Not Assigned
-                                {% endif %}
-                            </td>
 
-                            <td>
-                                <span class="badge bg-info text-dark">
-                                    {{ p.priority }}
+                    <tr>
+
+
+                        <td>
+                            <strong>{{ p.name }}</strong>
+                        </td>
+
+
+
+                        <td>
+
+                            {% if p.doctor %}
+
+                                Dr. {{ p.doctor.first_name }}
+                                {{ p.doctor.last_name }}
+
+                            {% else %}
+
+                                Not Assigned
+
+                            {% endif %}
+
+
+                        </td>
+
+
+
+
+                        <td>
+
+                            <span class="badge bg-info text-dark">
+
+                                {{ p.priority }}
+
+                            </span>
+
+
+                        </td>
+
+
+
+
+                        <td>
+
+
+                            {% if p.is_discharged %}
+
+
+                                <span class="badge bg-secondary">
+                                    Discharged
                                 </span>
-                            </td>
 
-                            <td>
 
-                                {% if p.is_discharged %}
-                                    <span class="badge bg-secondary">
-                                        Discharged
-                                    </span>
-                                {% else %}
-                                    <span class="badge bg-success">
-                                        Active
-                                    </span>
-                                {% endif %}
+                            {% else %}
 
-                            </td>
 
-                            <td>
+                                <span class="badge bg-success">
+                                    Active
+                                </span>
 
-                                <a href="{% url 'reception' %}?edit={{ p.id }}"
-                                   class="btn btn-sm btn-warning">
-                                    Edit
-                                </a>
 
-                                {% if not p.is_discharged %}
-                                    <a href="{% url 'discharge_patient' p.id %}"
-                                       class="btn btn-sm btn-danger">
-                                        Discharge
-                                    </a>
-                                {% endif %}
+                            {% endif %}
 
-                            </td>
 
-                        </tr>
-                        {% empty %}
+                        </td>
 
-                        <tr>
-                            <td colspan="5" class="text-center text-muted">
-                                No patients admitted yet
-                            </td>
-                        </tr>
 
-                        {% endfor %}
+
+
+                        <td>
+
+
+                            <a href="{% url 'reception' %}?edit={{ p.id }}"
+                               class="btn btn-sm btn-warning">
+
+                                Edit
+
+                            </a>
+
+
+
+                            {% if not p.is_discharged %}
+
+                            <a href="{% url 'discharge_patient' p.id %}"
+                               class="btn btn-sm btn-danger">
+
+                                Discharge
+
+                            </a>
+
+                            {% endif %}
+
+
+
+                        </td>
+
+
+                    </tr>
+
+
+
+
+                    {% empty %}
+
+
+                    <tr>
+
+                        <td colspan="5"
+                            class="text-center text-muted">
+
+                            No patients admitted yet
+
+                        </td>
+
+                    </tr>
+
+
+
+                    {% endfor %}
+
+
 
                     </tbody>
 
+
                 </table>
 
+
             </div>
+
+
         </div>
 
+
     </div>
+
+
 
 </body>
 </html>
