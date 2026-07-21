@@ -202,11 +202,8 @@
                                 </option>
                             {% endfor %}
 
-                        </select>
-                    </div>
-
-                    <!-- WARD -->
-                   <div class="mb-3">
+              <!-- WARD -->
+<div class="mb-3">
 
     <label class="form-label">
         Ward / Room
@@ -220,17 +217,21 @@
 
         {% for ward in wards %}
 
-            <option value="{{ ward.id }}"
-                {% if edit_patient.ward and edit_patient.ward.id == ward.id %}
-                    selected
-                {% endif %}
-            >
+            <option value="{{ ward.id }}">
                 {{ ward.name }}
+            </option>
+
+        {% empty %}
+
+            <option>
+                No wards found
             </option>
 
         {% endfor %}
 
     </select>
+
+</div>
 
 </div>
 

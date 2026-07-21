@@ -80,3 +80,4 @@ class AppointmentForm(forms.ModelForm):
             field.widget.attrs.update({
                 "class": "form-control"
             })
+            
